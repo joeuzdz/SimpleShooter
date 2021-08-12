@@ -33,6 +33,21 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	USkeletalMeshComponent* Mesh;
 
-	UPROPERTY(EditAnywhere, Category = "Particle System")
+	UPROPERTY(EditAnywhere, Category = "Assets")
 	UParticleSystem* MuzzleFlash;
+
+	UPROPERTY(EditAnywhere, Category = "Assets")
+	UParticleSystem* BulletHit;
+
+	UPROPERTY(EditAnywhere, Category = "Assets")
+	USoundBase* RifleFiredSound;
+
+	UPROPERTY(EditAnywhere, Category = "Assets")
+	USoundBase* RifleImpactSound;
+
+	UPROPERTY(EditAnywhere, Category = "Weapon Settings")
+	float MaxRange = 1000.f;
+
+	UPROPERTY(EditAnywhere, Category = "Weapon Settings")
+	float Damage = 10;
 };

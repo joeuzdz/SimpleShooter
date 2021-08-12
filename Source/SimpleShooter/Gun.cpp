@@ -4,6 +4,11 @@
 #include "Gun.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "DrawDebugHelpers.h"
+#include "GameFramework/Controller.h"
+#include "Engine/World.h"
+
+#define OUT
 
 // Sets default values
 AGun::AGun()
@@ -36,6 +41,35 @@ void AGun::Tick(float DeltaTime)
 void AGun::PullTrigger()
 {
 	UGameplayStatics::SpawnEmitterAttached(MuzzleFlash, Mesh, TEXT("MuzzleFlashSocket"));
-	UE_LOG(LogTemp, Warning, TEXT("Pulled Dat Trigger"));
+	UGameplayStatics::PlaySoundAtLocation(GetWorld(), RifleFiredSound, GetActorLocation());
+
+	APawn* OwnerPawn = Cast<APawn>(GetOwner());
+	if (!OwnerPawn) return;
+	AController* OwnerController = OwnerPawn->GetController();
+	if (!OwnerController) return;
+	FVector PVLocation;
+	FRotator PVRotation;
+	OwnerController->GetPlayerViewPoint(OUT PVLocation, OUT PVRotation);
+
+	FVector End = PVLocation + PVRotation.Vector() * MaxRange;
+
+
+	FHitResult Hit;
+	if (GetWorld()->LineTraceSingleByChannel(OUT Hit, PVLocation, End, ECollisionChannel::ECC_GameTraceChannel1))
+	{
+		FVector Spawn = Hit.Location - PVLocation;
+		Spawn = PVLocation + (0.9 * Spawn);
+		FVector ShotDirection = -PVRotation.Vector();
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), BulletHit, Spawn, ShotDirection.Rotation());
+		//UGameplayStatics::PlaySoundAtLocation(GetWorld(), RifleImpactSound, GetActorLocation());
+		AActor* HitActor = Hit.GetActor();
+		if (HitActor)
+		{
+			FPointDamageEvent DamageEvent(Damage, Hit, ShotDirection, nullptr);
+			HitActor->TakeDamage(Damage, DamageEvent, OwnerController, this);
+			//UE_LOG(LogTemp, Warning, TEXT("Actor Hit: %s"), *HitActor->GetName());
+		}
+	}
+
 }
 
