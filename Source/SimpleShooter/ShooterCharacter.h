@@ -32,6 +32,8 @@ public:
 
 	UFUNCTION(BlueprintPure)
 	bool IsDead() const;
+	
+	void PullTrigger();
 
 private:
 	void MoveForward(float AxisValue);
@@ -39,7 +41,6 @@ private:
 
 	void LookUpRate(float AxisValue);
 	void LookRightRate(float AxisValue);
-	void PullTrigger();
 
 	UPROPERTY(EditAnywhere, Category = "InputMovement")
 	float RotationRate = 75.f;

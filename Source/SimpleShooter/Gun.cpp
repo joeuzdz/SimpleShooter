@@ -53,9 +53,13 @@ void AGun::PullTrigger()
 
 	FVector End = PVLocation + PVRotation.Vector() * MaxRange;
 
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(this);
+	Params.AddIgnoredActor(GetOwner());
+
 
 	FHitResult Hit;
-	if (GetWorld()->LineTraceSingleByChannel(OUT Hit, PVLocation, End, ECollisionChannel::ECC_GameTraceChannel1))
+	if (GetWorld()->LineTraceSingleByChannel(OUT Hit, PVLocation, End, ECollisionChannel::ECC_GameTraceChannel1, Params))
 	{
 		FVector Spawn = Hit.Location - PVLocation;
 		Spawn = PVLocation + (0.9 * Spawn);
