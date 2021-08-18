@@ -25,3 +25,14 @@ void AShooterAIController::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
+
+bool AShooterAIController::IsDead() const
+{
+	AShooterCharacter* ControllerCharacter = Cast<AShooterCharacter>(GetPawn());
+	if (ControllerCharacter != nullptr)
+	{
+		return ControllerCharacter->IsDead();
+	}
+
+	return true;
+}

@@ -41,7 +41,7 @@ void AGun::Tick(float DeltaTime)
 void AGun::PullTrigger()
 {
 	UGameplayStatics::SpawnEmitterAttached(MuzzleFlash, Mesh, TEXT("MuzzleFlashSocket"));
-	UGameplayStatics::PlaySoundAtLocation(GetWorld(), RifleFiredSound, GetActorLocation());
+	UGameplayStatics::SpawnSoundAttached(RifleFiredSound, Mesh, TEXT("MuzzleFlashSocket"));
 
 	APawn* OwnerPawn = Cast<APawn>(GetOwner());
 	if (!OwnerPawn) return;
